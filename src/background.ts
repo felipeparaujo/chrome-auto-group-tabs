@@ -19,7 +19,7 @@ function addToCorrectGroup(tab: chrome.tabs.Tab, groups: any) {
   }
 }
 
-chrome.tabs.onAttached.addListener((tabId, attachInfo) => {
+chrome.tabs.onAttached.addListener((tabId: number, attachInfo: chrome.tabs.TabAttachInfo) => {
   chrome.tabs.get(tabId, (tab) => {
     chromeTabGroups.query({windowId: attachInfo.newWindowId}, (groups: any) => {
       addToCorrectGroup(tab, groups)
@@ -27,7 +27,7 @@ chrome.tabs.onAttached.addListener((tabId, attachInfo) => {
   })
 });
 
-chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
+chrome.tabs.onUpdated.addListener((tabId: number, changeInfo: chrome.tabs.TabChangeInfo, tab: chrome.tabs.Tab) => {
   if (changeInfo.status === "loading") {
     chromeTabGroups.query({windowId: tab.windowId}, (groups: any) => {
       addToCorrectGroup(tab, groups);
@@ -35,7 +35,7 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
   }
 })
 
-chrome.commands.onCommand.addListener(async (command) => {
+chrome.commands.onCommand.addListener(async (command: string) => {
   if (command === 'group-tabs') {
     const tabs = await chrome.tabs.query({
       currentWindow: true
