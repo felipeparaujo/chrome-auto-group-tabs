@@ -1,0 +1,19 @@
+{
+  "name": "Auto Group Tabs",
+  "description": "Automatically add tabs to groups based on their domain",
+  "version": "1.0",
+  "manifest_version": 3,
+  "permissions": ["tabs", "tabGroups"],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "commands": {
+    "group-tabs": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+Y",
+        "mac": "Command+Shift+Y"
+      },
+      "description": "Group Tabs by domain when multiple exist"
+    }
+  }
+}

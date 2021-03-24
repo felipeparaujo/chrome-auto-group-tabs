@@ -1,0 +1,32 @@
+{
+  "name": "chrome-auto-group-tabs",
+  "version": "1.0.0",
+  "description": "Chrome Extension starter built with TypeScript and Parcel",
+  "background": "dist/background.js",
+  "scripts": {
+    "build:bg": "parcel build src/background.ts --dist-dir dist/",
+    "build": "npm run build:bg",
+    "clean": "rm -rf dist",
+    "copy:static": "cp manifest.json dist/",
+    "dist": "npm run clean && npm run build && npm run copy:static",
+    "lint": "eslint --ext .ts,.tsx ./src"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "@types/chrome": "^0.0.133",
+    "@types/node": "^14.14.35",
+    "@typescript-eslint/eslint-plugin": "^4.19.0",
+    "@typescript-eslint/parser": "^4.19.0",
+    "eslint": "^7.22.0",
+    "parcel": "^2.0.0-beta.2",
+    "typescript": "^4.2.3"
+  },
+  "targets": {
+    "background": {
+      "isLibrary": false,
+      "sourceMap": {
+        "inline": true
+      }
+    }
+  }
+}
