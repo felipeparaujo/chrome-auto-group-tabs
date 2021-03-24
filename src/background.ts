@@ -7,13 +7,30 @@ function formatUrl(url: string): string {
   return parsedUrl.host.replace(/^www\./, "");
 }
 
-chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
-  if (changeInfo.status === "loading" && changeInfo.url && (tab as any).groupId === chromeTabGroups.TAB_GROUP_ID_NONE) {
-    const host = formatUrl(changeInfo.url);
-    chromeTabGroups.query({title: host}, (result: any) => {
-      if (result.length === 1 && result[0].windowId === tab.windowId) {
-        chromeTabs.group({groupId: result[0].id, tabIds: [tabId]})
+function addToCorrectGroup(tab: chrome.tabs.Tab, groups: any) {
+  if (tab.url && (tab as any).groupId === chromeTabGroups.TAB_GROUP_ID_NONE) {
+    const host = formatUrl(tab.url);
+    for (const group of groups) {
+      if (host === group.title) {
+        chromeTabs.group({groupId: group.id, tabIds: [tab.id]});
+        break;
       }
+    }
+  }
+}
+
+chrome.tabs.onAttached.addListener((tabId, attachInfo) => {
+  chrome.tabs.get(tabId, (tab) => {
+    chromeTabGroups.query({windowId: attachInfo.newWindowId}, (groups: any) => {
+      addToCorrectGroup(tab, groups)
+    })
+  })
+});
+
+chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
+  if (changeInfo.status === "loading") {
+    chromeTabGroups.query({windowId: tab.windowId}, (groups: any) => {
+      addToCorrectGroup(tab, groups);
     })
   }
 })
